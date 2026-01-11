@@ -8,12 +8,22 @@ class SnapWindowRedirectionCompletePurchaseResponse extends AbstractResponse
 {
     public function isPending()
     {
-        return !$this->isSuccessful();
+        return $this->getData()['transaction_status'] === 'pending';
+    }
+
+    public function isCancelled()
+    {
+        return $this->getData()['transaction_status'] === 'cancel';
+    }
+
+    public function isDeclined()
+    {
+        return $this->getData()['transaction_status'] === 'deny' || $this->getData()['transaction_status'] === 'expire';
     }
 
     public function isSuccessful()
     {
-        return $this->getData()['status_code'] == '200';
+        return $this->getData()['transaction_status'] === 'capture' || $this->getData()['transaction_status'] === 'settlement';
     }
 
     public function getTransactionReference()
